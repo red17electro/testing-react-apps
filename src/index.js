@@ -11,9 +11,8 @@ const lazyComponents = {}
 
 for (const modulePath in allDynamicImports) {
   if (allDynamicImports.hasOwnProperty(modulePath)) {
-    lazyComponents[
-      modulePath.replace('./examples', '').replace(/.js$/, '')
-    ] = React.lazy(allDynamicImports[modulePath])
+    lazyComponents[modulePath.replace('./examples', '').replace(/.js$/, '')] =
+      React.lazy(allDynamicImports[modulePath])
   }
 }
 
