@@ -2,29 +2,37 @@
 // http://localhost:3000/login
 
 import * as React from 'react'
+import {build, fake} from '@jackfranklin/test-data-bot'
 import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Login from '../../components/login'
 
+const userBuilder = build({
+  fields: {
+    username: fake(f => f.internet.userName()),
+    password: fake(f => f.internet.password()),
+  },
+})
+
 test('submitting the form calls onSubmit with username and password', async () => {
-  let submittedData
-  const handleSubmit = data => (submittedData = data)
+  const handleSubmit = jest.fn()
   render(<Login onSubmit={handleSubmit} />)
 
-  const username = screen.getByLabelText(/username/i)
-  const password = screen.getByLabelText(/password/i)
+  const user = userBuilder({
+    overrides: {
+      password: '123',
+    },
+  })
 
-  const testUsername = 'red17electro';
-  const testPassword = 'password';
-
-  await userEvent.type(username, testUsername)
-  await userEvent.type(password, testPassword)
+  await userEvent.type(screen.getByLabelText(/username/i), user.username)
+  await userEvent.type(screen.getByLabelText(/password/i), user.password)
   await userEvent.click(screen.getByRole('button', {name: /submit/i}))
 
-  expect(submittedData).toEqual({
-    username: testUsername,
-    password: testPassword,
+  expect(handleSubmit).toHaveBeenCalledWith({
+    username: user.username,
+    password: user.password,
   })
+  expect(handleSubmit).toHaveBeenCalledTimes(1)
 })
 
 /*
