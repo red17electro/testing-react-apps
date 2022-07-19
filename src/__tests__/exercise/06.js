@@ -41,9 +41,12 @@ test('displays the users current location', async () => {
 test('displays the users current location', async () => {
   function useMockCurrentPosition() {
     const [state] = React.useState([])
-    return [state, {
-      message: 'some error'
-    }];
+    return [
+      state,
+      {
+        message: 'some error',
+      },
+    ]
   }
   useCurrentPosition.mockImplementation(useMockCurrentPosition)
   render(<Location />)
