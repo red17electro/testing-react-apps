@@ -38,6 +38,18 @@ test('displays the users current location', async () => {
   expect(screen.getByText(/longitude/i)).toBeInTheDocument()
 })
 
+test('displays the users current location', async () => {
+  function useMockCurrentPosition() {
+    const [state] = React.useState([])
+    return [state, {
+      message: 'some error'
+    }];
+  }
+  useCurrentPosition.mockImplementation(useMockCurrentPosition)
+  render(<Location />)
+  expect(screen.queryByRole(/alert/i)).toBeInTheDocument()
+})
+
 /*
 eslint
   no-unused-vars: "off",
